@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>决策风格与情绪稳定性测评</title>
+    <title>综合决策能力测评</title>
     <style>
         :root {
             --bg: #f0f4f8;
@@ -14,19 +14,13 @@
             --primary-hover: #3b5de7;
             --success: #38a169;
             --danger: #e53e3e;
-            --warning: #ed8936;
             --border: #e2e8f0;
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
             --radius: 16px;
             --radius-sm: 10px;
             --font: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: var(--font);
             background: linear-gradient(135deg, #e8eef5 0%, #dce3ed 30%, #eef1f7 60%, #e3e8f2 100%);
@@ -39,344 +33,124 @@
             user-select: none;
             -webkit-user-select: none;
         }
-        .app-container {
-            width: 100%;
-            max-width: 520px;
-            position: relative;
-            z-index: 1;
-        }
+        .app-container { width:100%; max-width:580px; position:relative; z-index:1; }
         .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 28px 24px;
-            border: 1px solid var(--border);
-            text-align: center;
-            transition: all 0.2s;
+            background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+            padding: 28px 24px; border: 1px solid var(--border); text-align: center; transition: all 0.2s;
         }
-        .card.shake {
-            animation: cardShake 0.5s ease-out;
-        }
+        .card.shake { animation: cardShake 0.5s ease-out; }
         @keyframes cardShake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            10%,
-            50%,
-            90% {
-                transform: translateX(-6px);
-            }
-            30%,
-            70% {
-                transform: translateX(6px);
-            }
+            0%,100%{ transform:translateX(0); } 10%,50%,90%{ transform:translateX(-6px); } 30%,70%{ transform:translateX(6px); }
+        }
+        .step { display: none; }
+        .step.active { display: block; }
+        h2 { font-size:1.5rem; margin-bottom:8px; color:var(--text); }
+        .subtitle { font-size:0.9rem; color:var(--text-secondary); margin-bottom:20px; }
+
+        .form-group { text-align:left; margin-bottom:16px; }
+        .form-group label { display:block; font-weight:600; margin-bottom:6px; color:var(--text); font-size:0.9rem; }
+        .form-group input, .form-group select {
+            width:100%; padding:10px 14px; border:2px solid var(--border); border-radius:var(--radius-sm);
+            font-size:1rem; font-family:var(--font); background:#fafcfd; transition:border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(74,108,247,0.1); background:#fff;
         }
 
-        .step {
-            display: none;
+        .scenario-box {
+            background:#f7fafc; border-radius:var(--radius-sm); padding:16px; margin-bottom:18px;
+            text-align:left; border:1px solid var(--border);
         }
-        .step.active {
-            display: block;
-        }
+        .scenario-title { font-weight:700; margin-bottom:8px; color:var(--text); }
+        .scenario-desc { font-size:0.9rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.6; }
+        .option-item { margin-bottom:8px; }
+        .option-item label { display:flex; align-items:flex-start; gap:8px; cursor:pointer; font-size:0.9rem; color:var(--text); padding:6px 0; border-radius:6px; }
+        .option-item label:hover { background:#edf2f7; }
+        .option-item input[type="radio"] { margin-top:3px; transform:scale(1.2); accent-color:var(--primary); }
 
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-        .subtitle {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            text-align: left;
-            margin-bottom: 16px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text);
-            font-size: 0.9rem;
-        }
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 1rem;
-            font-family: var(--font);
-            background: #fafcfd;
-            transition: border-color 0.2s;
-        }
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
-            background: #fff;
-        }
-
-        .question-item {
-            background: #f7fafc;
-            border-radius: var(--radius-sm);
-            padding: 14px;
-            margin-bottom: 12px;
-            text-align: left;
-            border: 1px solid var(--border);
-        }
-        .question-text {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-        .likert {
-            display: flex;
-            justify-content: space-between;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .likert label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-        }
-        .likert input[type="radio"] {
-            margin-bottom: 4px;
-            transform: scale(1.2);
-        }
+        .likert-scale { display:flex; justify-content:space-between; gap:4px; flex-wrap:wrap; }
+        .likert-scale label { display:flex; flex-direction:column; align-items:center; font-size:0.7rem; color:var(--text-secondary); cursor:pointer; }
+        .likert-scale input[type="radio"] { margin-bottom:4px; transform:scale(1.1); }
 
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 14px 28px;
-            font-size: 1rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 28px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: var(--font);
-            white-space: nowrap;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
+            display:inline-flex; align-items:center; justify-content:center; gap:8px;
+            padding:14px 28px; font-size:1rem; font-weight:700; border:none; border-radius:28px;
+            cursor:pointer; transition:all 0.2s; font-family:var(--font); white-space:nowrap; outline:none;
         }
-        .btn:active {
-            transform: scale(0.95);
+        .btn:active { transform:scale(0.95); }
+        .btn:disabled { opacity:0.5; cursor:not-allowed; pointer-events:none; }
+        .btn-primary { background:var(--primary); color:#fff; box-shadow:0 6px 20px rgba(74,108,247,0.35); width:100%; }
+        .btn-primary:hover:not(:disabled) { background:var(--primary-hover); transform:translateY(-2px); }
+        .btn-outline { background:#fff; color:var(--text); border:2px solid var(--border); }
+        .btn-success { background:#fff; color:var(--success); border:2px solid var(--success); }
+
+        .info-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+        .badge {
+            background:#f7fafc; border:1px solid var(--border); border-radius:20px; padding:6px 14px;
+            font-size:0.85rem; font-weight:600; display:inline-flex; align-items:center; gap:6px;
         }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.35);
-            width: 100%;
-        }
-        .btn-primary:hover:not(:disabled) {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-        }
-        .btn-secondary {
-            background: #fff;
-            color: var(--text);
-            border: 2px solid var(--border);
-        }
-        .btn-danger {
-            background: #fff;
-            color: var(--danger);
-            border: 2px solid #feb2b2;
-        }
-        .btn-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
+        .badge.score { background:#fffbeb; border-color:#fbd38d; color:#b7791f; }
 
         .canvas-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 300px;
-            margin: 8px auto 12px;
-            aspect-ratio: 1 / 1.15;
-            background: radial-gradient(ellipse at center, #fafcfd 0%, #edf2f7 100%);
-            border-radius: var(--radius-sm);
-            border: 2px dashed #e2e8f0;
-            overflow: hidden;
+            position:relative; width:100%; max-width:300px; margin:8px auto 12px;
+            aspect-ratio:1/1.15; background:radial-gradient(ellipse at center, #fafcfd 0%, #edf2f7 100%);
+            border-radius:var(--radius-sm); border:2px dashed #e2e8f0; overflow:hidden;
         }
-        .canvas-wrapper.danger-zone {
-            border-color: #fc8181;
-            animation: dangerPulse 0.8s infinite;
-        }
-        @keyframes dangerPulse {
-            0%,
-            100% {
-                border-color: #fc8181;
-            }
-            50% {
-                border-color: #feb2b2;
-            }
-        }
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
+        .canvas-wrapper.danger { border-color:#fc8181; animation:dangerPulse 0.8s infinite; }
+        @keyframes dangerPulse { 0%,100%{border-color:#fc8181;} 50%{border-color:#feb2b2;} }
+        canvas { display:block; width:100%; height:100%; }
 
-        .info-badge {
-            background: #f7fafc;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+        .risk-tag {
+            display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px;
+            font-size:0.8rem; font-weight:600; margin-bottom:10px;
         }
-        .score-badge {
-            background: #fffbeb;
-            border-color: #fbd38d;
-            color: #b7791f;
-        }
-        .risk-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .low-risk {
-            background: #ebf8ff;
-            color: #2b6cb0;
-            border: 1px solid #bee3f8;
-        }
-        .medium-risk {
-            background: #fffaf0;
-            color: #c05621;
-            border: 1px solid #fbd38d;
-        }
-        .high-risk {
-            background: #fff5f5;
-            color: #c53030;
-            border: 1px solid #feb2b2;
-        }
+        .risk-tag.low { background:#ebf8ff; color:#2b6cb0; border:1px solid #bee3f8; }
+        .risk-tag.medium { background:#fffaf0; color:#c05621; border:1px solid #fbd38d; }
+        .risk-tag.high { background:#fff5f5; color:#c53030; border:1px solid #feb2b2; }
 
         .feedback-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:100;
+            display:flex; align-items:center; justify-content:center;
         }
-        .feedback-text {
-            font-size: 3rem;
-            font-weight: 900;
-            opacity: 0;
-            animation: feedbackPop 1s ease-out forwards;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-        .feedback-text.explode {
-            color: #e53e3e;
-        }
-        .feedback-text.cashout {
-            color: #38a169;
-        }
-        @keyframes feedbackPop {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) translateY(20px);
-            }
-            25% {
-                opacity: 1;
-                transform: scale(1.2) translateY(-10px);
-            }
-            60% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.9) translateY(-30px);
-            }
+        .feedback-text { font-size:3rem; font-weight:900; opacity:0; animation:pop 1s ease-out forwards; text-shadow:0 4px 20px rgba(0,0,0,0.2); }
+        .feedback-text.explode { color:#e53e3e; }
+        .feedback-text.cashout { color:#38a169; }
+        @keyframes pop {
+            0%{ opacity:0; transform:scale(0.3) translateY(20px); }
+            25%{ opacity:1; transform:scale(1.2) translateY(-10px); }
+            60%{ opacity:1; transform:scale(1) translateY(0); }
+            100%{ opacity:0; transform:scale(0.9) translateY(-30px); }
         }
         .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d3748;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 24px;
-            font-weight: 600;
-            z-index: 200;
-            opacity: 0;
-            animation: toastIn 0.4s ease-out forwards, toastOut 0.4s ease-in 2s forwards;
-            pointer-events: none;
+            position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+            background:#2d3748; color:#fff; padding:12px 24px; border-radius:24px;
+            font-weight:600; z-index:200; opacity:0; pointer-events:none;
+            animation:toastIn 0.4s ease-out forwards, toastOut 0.4s ease-in 2s forwards;
         }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        @keyframes toastOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-10px);
-            }
-        }
+        @keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(20px);} to{opacity:1;transform:translateX(-50%) translateY(0);} }
+        @keyframes toastOut { from{opacity:1;} to{opacity:0;transform:translateX(-50%) translateY(-10px);} }
     </style>
 </head>
 <body>
-    <div class="app-container" id="app">
-        <!-- 动态步骤内容 -->
-    </div>
+    <div class="app-container" id="app"></div>
     <div class="feedback-overlay" id="feedbackOverlay"></div>
     <div id="toastContainer"></div>
 
     <script>
         (function() {
-            // ==================== 全局配置 ====================
+            // ==================== 配置区域 ====================
+            // ！！！请将下面的 FORMSPREE_ID 替换成您在 formspree.io 注册后获得的 ID ！！！
+            const FORMSPREE_ID = 'YOUR_FORMSPREE_ID'; // 例如 'xqkyaoae'
+            const DATA_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
+            // 如果使用自己的后端接口，也可以直接修改 DATA_ENDPOINT 为您的 URL。
+
             const CONFIG = {
                 totalTrials: 30,
                 practiceTrials: 3,
                 conditions: [
-                    { name: 'low', label: '低风险', colorHex: '#4da6e8', thresholdMin: 5, thresholdMax: 25,
-                        dotClass: 'low', cssClass: 'low-risk', riskLabel: '低风险气球' },
-                    { name: 'medium', label: '中风险', colorHex: '#f0a04b', thresholdMin: 2, thresholdMax: 18,
-                        dotClass: 'medium', cssClass: 'medium-risk', riskLabel: '中风险气球' },
-                    { name: 'high', label: '高风险', colorHex: '#e85d5d', thresholdMin: 1, thresholdMax: 10,
-                        dotClass: 'high', cssClass: 'high-risk', riskLabel: '高风险气球' },
+                    { name:'low', label:'低风险', colorHex:'#4da6e8', thresholdMin:5, thresholdMax:25, cssClass:'low', riskLabel:'低风险气球' },
+                    { name:'medium', label:'中风险', colorHex:'#f0a04b', thresholdMin:2, thresholdMax:18, cssClass:'medium', riskLabel:'中风险气球' },
+                    { name:'high', label:'高风险', colorHex:'#e85d5d', thresholdMin:1, thresholdMax:10, cssClass:'high', riskLabel:'高风险气球' },
                 ],
                 trialsPerCondition: 10,
                 baseBalloonRadius: 0.22,
@@ -385,33 +159,52 @@
                 canvasScale: 2,
             };
 
-            // 大五人格 - 情绪稳定性量表（神经质维度）题目
-            const NEUROTICISM_QUESTIONS = [
-                { id: 'N1', text: '我容易感到紧张和焦虑。', reverse: false },
-                { id: 'N2', text: '我经常感到忧郁或沮丧。', reverse: false },
-                { id: 'N3', text: '我容易生气。', reverse: false },
-                { id: 'N4', text: '我能够应对压力。', reverse: true },
-                { id: 'N5', text: '我情绪稳定，不容易心烦。', reverse: true },
-                { id: 'N6', text: '我有时会觉得自己没有价值。', reverse: false },
-                { id: 'N7', text: '我很少感到孤独或忧郁。', reverse: true },
-                { id: 'N8', text: '我容易惊慌。', reverse: false },
-                { id: 'N9', text: '我在压力下保持冷静。', reverse: true },
-                { id: 'N10', text: '我经常情绪波动。', reverse: false },
+            // 情境判断测验题目（可根据岗位自定义）
+            const SJT_SCENARIOS = [
+                {
+                    id: 'SJT1', title: '场景1：客户特殊要求',
+                    desc: '你是客户经理，一位重要客户要求你在合同中加入一项条款，但该条款轻微违反了公司内部风险政策。不答应可能失去大单，答应则可能被审计发现。你会怎么做？',
+                    options: ['A. 拒绝客户，严格遵循公司政策，即使可能丢单。', 'B. 答应客户，认为风险不大，优先保住业绩。', 'C. 向客户解释风险，并提议一个折中方案，既满足需求又不明显违规。', 'D. 先答应客户，事后向领导报备争取补签豁免。']
+                }, {
+                    id: 'SJT2', title: '场景2：同事违规操作',
+                    desc: '你发现一位资深同事经常绕过审批流程直接做决策，虽然目前没有造成损失，但明显违反规定。你会怎么处理？',
+                    options: ['A. 直接向合规部门举报。', 'B. 私下提醒同事，希望他改正。', 'C. 装作没看见，多一事不如少一事。', 'D. 在团队会议上暗示规则的重要性，不点名。']
+                }, {
+                    id: 'SJT3', title: '场景3：紧急项目决策',
+                    desc: '你负责的一个项目突然遇到技术故障，按标准流程修复需要两周，但客户要求三天内解决。此时你可以采用一个未充分测试的方案，有70%把握成功。你会怎么做？',
+                    options: ['A. 坚持标准流程，向客户解释需要更多时间。', 'B. 冒险采用快速方案，赌一把能成功。', 'C. 先部分尝试快速方案，同时准备应急预案。', 'D. 寻求上级指示，自己不担责。']
+                }, {
+                    id: 'SJT4', title: '场景4：资源分配冲突',
+                    desc: '两个重要项目同时申请有限的人力资源，你是部门经理。一个项目利润高但风险大，另一个利润低但稳定。你会如何分配？',
+                    options: ['A. 全部投入高利润项目，追求最大回报。', 'B. 全部投入低风险项目，确保稳定。', 'C. 按比例分配，两边兼顾。', 'D. 让两个项目负责人自己协商。']
+                }, {
+                    id: 'SJT5', title: '场景5：客户投诉处理',
+                    desc: '一位客户因服务质量问题投诉，情绪激动，要求高额赔偿。但你调查后发现公司责任较小。你会怎么回应？',
+                    options: ['A. 坚持公司立场，拒绝不合理赔偿。', 'B. 为了避免负面舆情，同意部分赔偿。', 'C. 诚恳沟通，承认服务瑕疵，但解释责任界限，提供象征性补偿。', 'D. 把责任推给一线员工，安抚客户。']
+                }
             ];
 
-            const LIKERT_LABELS = ['非常不同意', '不同意', '中立', '同意', '非常同意'];
+            // 情绪稳定性题目（大五神经质）
+            const NEURO_QUESTIONS = [
+                { id:'N1', text:'我容易感到紧张和焦虑。', reverse:false },
+                { id:'N2', text:'我经常感到忧郁或沮丧。', reverse:false },
+                { id:'N3', text:'我容易生气。', reverse:false },
+                { id:'N4', text:'我能够应对压力。', reverse:true },
+                { id:'N5', text:'我情绪稳定，不容易心烦。', reverse:true },
+                { id:'N6', text:'我有时会觉得自己没有价值。', reverse:false },
+                { id:'N7', text:'我很少感到孤独或忧郁。', reverse:true },
+                { id:'N8', text:'我容易惊慌。', reverse:false },
+                { id:'N9', text:'我在压力下保持冷静。', reverse:true },
+                { id:'N10', text:'我经常情绪波动。', reverse:false },
+            ];
 
             // ==================== 全局状态 ====================
             const STATE = {
                 step: 'welcome',
-                participant: {
-                    phone: '',
-                    gender: '',
-                    age: '',
-                },
-                neuroticismAnswers: {}, // {N1: 1-5, ...}
-                neuroticismScore: null,
-                // 游戏状态
+                participant: { phone:'', gender:'', age:'' },
+                sjtAnswers: {},
+                neuroAnswers: {},
+                neuroScore: null,
                 currentTrial: 0,
                 totalCompletedTrials: 0,
                 isPracticePhase: true,
@@ -430,736 +223,466 @@
                 sessionId: '',
             };
 
-            // Canvas相关变量
+            // Canvas相关
             let canvas, ctx, particleSystem;
-            let canvasLogicalW = 300,
-                canvasLogicalH = 345;
+            let cw = 300, ch = 345;
             let balloonX, balloonY, balloonBaseY;
-            let shakeOffsetX = 0,
-                shakeOffsetY = 0,
-                shakeIntensity = 0;
-            let flashAlpha = 0,
-                flashColor = '';
-            let successGlow = 0;
-            let renderLoopId = null;
+            let shakeX=0, shakeY=0, shakeIntensity=0;
+            let flashAlpha=0, flashColor='';
+            let successGlow=0;
+            let renderLoopId=null;
 
-            // ==================== 辅助函数 ====================
-            function showToast(msg) {
-                const container = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.textContent = msg;
-                container.appendChild(toast);
-                setTimeout(() => toast.remove(), 2500);
-            }
-
-            function showFeedback(text, type) {
-                const overlay = document.getElementById('feedbackOverlay');
-                const el = document.createElement('div');
-                el.className = 'feedback-text ' + type;
-                el.textContent = text;
-                overlay.appendChild(el);
-                setTimeout(() => el.remove(), 1100);
-            }
-
-            // ==================== 音效 ====================
-            let audioCtx = null;
-
-            function getAudioContext() {
-                if (!audioCtx) {
-                    try {
-                        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-                    } catch (e) { audioCtx = null; }
-                }
-                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            // 音效
+            let audioCtx=null;
+            function getAudio() {
+                if(!audioCtx) { try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){audioCtx=null;} }
+                if(audioCtx&&audioCtx.state==='suspended') audioCtx.resume();
                 return audioCtx;
             }
-
-            function playPumpSound() {
-                const ctx = getAudioContext();
-                if (!ctx) return;
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(300, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(ctx.currentTime);
-                osc.stop(ctx.currentTime + 0.12);
+            function playPump() {
+                const a=getAudio(); if(!a) return;
+                const o=a.createOscillator(), g=a.createGain();
+                o.type='sine'; o.frequency.setValueAtTime(300,a.currentTime); o.frequency.exponentialRampToValueAtTime(180,a.currentTime+0.1);
+                g.gain.setValueAtTime(0.3,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.12);
+                o.connect(g); g.connect(a.destination); o.start(a.currentTime); o.stop(a.currentTime+0.12);
             }
-
-            function playExplosionSound() {
-                const ctx = getAudioContext();
-                if (!ctx) return;
-                const bufferSize = ctx.sampleRate * 0.4;
-                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate *
-                        0.06));
-                const source = ctx.createBufferSource();
-                source.buffer = buffer;
-                const gain = ctx.createGain();
-                gain.gain.setValueAtTime(0.7, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-                const filter = ctx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(2000, ctx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
-                source.connect(filter);
-                filter.connect(gain);
-                gain.connect(ctx.destination);
-                source.start(ctx.currentTime);
+            function playExplosion() {
+                const a=getAudio(); if(!a) return;
+                const s=a.sampleRate*0.4, b=a.createBuffer(1,s,a.sampleRate), d=b.getChannelData(0);
+                for(let i=0;i<s;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(a.sampleRate*0.06));
+                const src=a.createBufferSource(); src.buffer=b;
+                const g=a.createGain(); g.gain.setValueAtTime(0.7,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.35);
+                const f=a.createBiquadFilter(); f.type='lowpass'; f.frequency.setValueAtTime(2000,a.currentTime); f.frequency.exponentialRampToValueAtTime(100,a.currentTime+0.3);
+                src.connect(f); f.connect(g); g.connect(a.destination); src.start(a.currentTime);
             }
-
-            function playCashoutSound() {
-                const ctx = getAudioContext();
-                if (!ctx) return;
-                [523, 659, 784].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
-                    gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.2);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(ctx.currentTime + i * 0.1);
-                    osc.stop(ctx.currentTime + i * 0.1 + 0.2);
+            function playCashout() {
+                const a=getAudio(); if(!a) return;
+                [523,659,784].forEach((freq,i)=>{
+                    const o=a.createOscillator(), g=a.createGain();
+                    o.type='triangle'; o.frequency.setValueAtTime(freq,a.currentTime+i*0.1);
+                    g.gain.setValueAtTime(0.25,a.currentTime+i*0.1); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+i*0.1+0.2);
+                    o.connect(g); g.connect(a.destination); o.start(a.currentTime+i*0.1); o.stop(a.currentTime+i*0.1+0.2);
                 });
             }
 
-            // ==================== 粒子系统 ====================
             class ParticleSystem {
-                constructor(canvas, ctx) {
-                    this.canvas = canvas;
-                    this.ctx = ctx;
-                    this.particles = [];
-                    this.running = false;
-                    this.animId = null;
-                }
-                emit(x, y, color, count = 60) {
-                    for (let i = 0; i < count; i++) {
-                        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.8;
-                        const speed = 1.5 + Math.random() * 6;
-                        const size = 2 + Math.random() * 5;
-                        this.particles.push({
-                            x,
-                            y,
-                            vx: Math.cos(angle) * speed,
-                            vy: Math.sin(angle) * speed - Math.random() * 3,
-                            life: 1,
-                            decay: 0.015 + Math.random() * 0.04,
-                            size,
-                            color,
-                            gravity: 0.08 + Math.random() * 0.06,
-                        });
+                constructor(canvas,ctx){ this.canvas=canvas; this.ctx=ctx; this.particles=[]; this.running=false; }
+                emit(x,y,color,count=60){
+                    for(let i=0;i<count;i++){
+                        const ang=Math.PI*2*i/count+(Math.random()-0.5)*0.8;
+                        const sp=1.5+Math.random()*6;
+                        this.particles.push({x,y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-Math.random()*3,life:1,decay:0.015+Math.random()*0.04,size:2+Math.random()*5,color,gravity:0.08+Math.random()*0.06});
                     }
                 }
-                start() {
-                    if (this.running) return;
-                    this.running = true;
-                    this.loop();
+                start(){ if(this.running) return; this.running=true; this.loop(); }
+                loop(){
+                    if(!this.running) return;
+                    this.particles=this.particles.filter(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=p.gravity; p.life-=p.decay; return p.life>0; });
+                    if(this.particles.length===0){ this.running=false; return; }
+                    requestAnimationFrame(()=>this.loop());
                 }
-                loop() {
-                    if (!this.running) return;
-                    this.particles = this.particles.filter(p => {
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        p.vy += p.gravity;
-                        p.life -= p.decay;
-                        return p.life > 0;
-                    });
-                    if (this.particles.length === 0) {
-                        this.running = false;
-                        this.animId = null;
-                        return;
-                    }
-                    this.animId = requestAnimationFrame(() => this.loop());
-                }
-                draw(ctx) {
-                    for (const p of this.particles) {
-                        ctx.save();
-                        ctx.globalAlpha = p.life;
-                        ctx.fillStyle = p.color;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.globalAlpha = p.life * 0.4;
-                        ctx.fillStyle = '#fff';
-                        ctx.beginPath();
-                        ctx.arc(p.x - p.size * 0.2, p.y - p.size * 0.2, p.size * 0.4, 0, Math.PI * 2);
-                        ctx.fill();
+                draw(ctx){
+                    for(const p of this.particles){
+                        ctx.save(); ctx.globalAlpha=p.life; ctx.fillStyle=p.color;
+                        ctx.beginPath(); ctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2); ctx.fill();
                         ctx.restore();
                     }
                 }
-                stop() {
-                    this.running = false;
-                    if (this.animId) cancelAnimationFrame(this.animId);
-                    this.particles = [];
-                }
-                get isActive() { return this.particles.length > 0 || this.running; }
+                stop(){ this.running=false; this.particles=[]; }
+                get isActive(){ return this.particles.length>0||this.running; }
+            }
+
+            function showToast(msg){
+                const c=document.getElementById('toastContainer');
+                const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+                c.appendChild(t); setTimeout(()=>t.remove(),2500);
+            }
+            function showFeedback(text,type){
+                const o=document.getElementById('feedbackOverlay');
+                const e=document.createElement('div'); e.className='feedback-text '+type; e.textContent=text;
+                o.appendChild(e); setTimeout(()=>e.remove(),1100);
             }
 
             // ==================== 步骤渲染 ====================
-            function renderStep(step) {
-                STATE.step = step;
-                const app = document.getElementById('app');
-                switch (step) {
+            function renderStep(step){
+                STATE.step=step;
+                const app=document.getElementById('app');
+                switch(step){
                     case 'welcome':
-                        app.innerHTML = `
+                        app.innerHTML=`
                         <div class="card">
-                            <div style="font-size:3rem;margin-bottom:8px;">🎈</div>
-                            <h2>决策风格与情绪稳定性测评</h2>
-                            <p class="subtitle">本测评包含一份简短问卷和一个气球决策游戏，全程约10分钟。</p>
-                            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:20px;">
-                                您的数据仅用于测评分析，不会泄露给第三方。
-                            </p>
+                            <div style="font-size:3rem;">🧠</div>
+                            <h2>综合决策能力测评</h2>
+                            <p class="subtitle">本测评包含情景判断、人格问卷和风险决策游戏，全程约15分钟。数据仅用于评估，严格保密。</p>
                             <button class="btn btn-primary" id="btnStart">开始测评</button>
                         </div>`;
-                        document.getElementById('btnStart').addEventListener('click', () => {
-                            renderStep('demographics');
-                        });
+                        document.getElementById('btnStart').addEventListener('click',()=>renderStep('demographics'));
                         break;
-
                     case 'demographics':
-                        app.innerHTML = `
+                        app.innerHTML=`
                         <div class="card">
                             <h2>基本信息</h2>
-                            <p class="subtitle">请如实填写，我们将严格保密</p>
-                            <div class="form-group">
-                                <label>📱 手机号</label>
-                                <input type="tel" id="phone" placeholder="请输入手机号" maxlength="11" value="${STATE.participant.phone}">
-                            </div>
-                            <div class="form-group">
-                                <label>⚥ 性别</label>
-                                <select id="gender">
-                                    <option value="" ${STATE.participant.gender===''?'selected':''}>请选择</option>
-                                    <option value="男" ${STATE.participant.gender==='男'?'selected':''}>男</option>
-                                    <option value="女" ${STATE.participant.gender==='女'?'selected':''}>女</option>
-                                    <option value="其他" ${STATE.participant.gender==='其他'?'selected':''}>其他</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>🎂 年龄</label>
-                                <input type="number" id="age" placeholder="请输入年龄" min="18" max="80" value="${STATE.participant.age}">
-                            </div>
-                            <button class="btn btn-primary" id="btnDemographicsNext">下一步</button>
+                            <div class="form-group"><label>📱 手机号</label><input type="tel" id="phone" placeholder="请输入手机号" maxlength="11" value="${STATE.participant.phone}"></div>
+                            <div class="form-group"><label>⚥ 性别</label><select id="gender"><option value="" ${!STATE.participant.gender?'selected':''}>请选择</option><option value="男" ${STATE.participant.gender==='男'?'selected':''}>男</option><option value="女" ${STATE.participant.gender==='女'?'selected':''}>女</option></select></div>
+                            <div class="form-group"><label>🎂 年龄</label><input type="number" id="age" min="18" max="80" value="${STATE.participant.age}"></div>
+                            <button class="btn btn-primary" id="btnDemoNext">下一步</button>
                         </div>`;
-                        document.getElementById('btnDemographicsNext').addEventListener('click', () => {
-                            const phone = document.getElementById('phone').value.trim();
-                            const gender = document.getElementById('gender').value;
-                            const age = document.getElementById('age').value;
-                            if (!phone || !gender || !age) {
-                                showToast('请填写所有信息');
-                                return;
-                            }
-                            STATE.participant = { phone, gender, age };
-                            renderStep('questionnaire');
+                        document.getElementById('btnDemoNext').addEventListener('click',()=>{
+                            const p=document.getElementById('phone').value.trim();
+                            const g=document.getElementById('gender').value;
+                            const a=document.getElementById('age').value;
+                            if(!p||!g||!a) return showToast('请填写完整');
+                            STATE.participant={phone:p,gender:g,age:a};
+                            renderStep('sjt');
                         });
                         break;
-
-                    case 'questionnaire':
-                        let questionsHTML = NEUROTICISM_QUESTIONS.map((q, idx) => {
-                            const saved = STATE.neuroticismAnswers[q.id] || '';
-                            let radios = '';
-                            for (let val = 1; val <= 5; val++) {
-                                const checked = saved == val ? 'checked' : '';
-                                radios += `
-                                <label>
-                                    <input type="radio" name="${q.id}" value="${val}" ${checked}>
-                                    <span>${val}</span>
-                                </label>`;
-                            }
-                            return `
-                            <div class="question-item">
-                                <div class="question-text">${idx+1}. ${q.text}</div>
-                                <div class="likert">${radios}</div>
-                                <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px;display:flex;justify-content:space-between;">
-                                    <span>1=非常不同意</span><span>5=非常同意</span>
-                                </div>
-                            </div>`;
+                    case 'sjt':
+                        let sjtHTML = SJT_SCENARIOS.map((sc,i)=>{
+                            let opts = sc.options.map(opt=>{
+                                const val=opt.charAt(0);
+                                const checked=STATE.sjtAnswers[sc.id]===val?'checked':'';
+                                return `<div class="option-item"><label><input type="radio" name="${sc.id}" value="${val}" ${checked}> ${opt}</label></div>`;
+                            }).join('');
+                            return `<div class="scenario-box"><div class="scenario-title">${sc.title}</div><div class="scenario-desc">${sc.desc}</div>${opts}</div>`;
                         }).join('');
-
-                        app.innerHTML = `
+                        app.innerHTML=`
+                        <div class="card">
+                            <h2>情景判断测验</h2>
+                            <p class="subtitle">请选择在以下情景中你最可能采取的行动</p>
+                            ${sjtHTML}
+                            <button class="btn btn-primary" id="btnSJTNext">下一步</button>
+                        </div>`;
+                        document.getElementById('btnSJTNext').addEventListener('click',()=>{
+                            const answers={}; let allOk=true;
+                            SJT_SCENARIOS.forEach(sc=>{
+                                const sel=document.querySelector(`input[name="${sc.id}"]:checked`);
+                                if(!sel) allOk=false; else answers[sc.id]=sel.value;
+                            });
+                            if(!allOk) return showToast('请回答所有情景');
+                            STATE.sjtAnswers=answers;
+                            renderStep('neuro');
+                        });
+                        break;
+                    case 'neuro':
+                        let neuroHTML = NEURO_QUESTIONS.map((q,idx)=>{
+                            let radios='';
+                            for(let v=1;v<=5;v++){
+                                const ch=STATE.neuroAnswers[q.id]==v?'checked':'';
+                                radios+=`<label><input type="radio" name="${q.id}" value="${v}" ${ch}><span>${v}</span></label>`;
+                            }
+                            return `<div class="scenario-box"><div class="scenario-title">${idx+1}. ${q.text}</div><div class="likert-scale">${radios}</div><div style="display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-secondary);margin-top:4px;"><span>1=非常不同意</span><span>5=非常同意</span></div></div>`;
+                        }).join('');
+                        app.innerHTML=`
                         <div class="card">
                             <h2>情绪稳定性问卷</h2>
-                            <p class="subtitle">请根据您的真实感受选择最符合的选项</p>
-                            ${questionsHTML}
-                            <button class="btn btn-primary" id="btnQuestionnaireSubmit">提交并进入游戏</button>
+                            <p class="subtitle">请根据真实感受选择</p>
+                            ${neuroHTML}
+                            <button class="btn btn-primary" id="btnNeuroSubmit">下一步</button>
                         </div>`;
-                        document.getElementById('btnQuestionnaireSubmit').addEventListener('click', () => {
-                            const answers = {};
-                            let allAnswered = true;
-                            NEUROTICISM_QUESTIONS.forEach(q => {
-                                const selected = document.querySelector(`input[name="${q.id}"]:checked`);
-                                if (!selected) allAnswered = false;
-                                else answers[q.id] = parseInt(selected.value);
+                        document.getElementById('btnNeuroSubmit').addEventListener('click',()=>{
+                            const ans={}; let ok=true;
+                            NEURO_QUESTIONS.forEach(q=>{
+                                const s=document.querySelector(`input[name="${q.id}"]:checked`);
+                                if(!s) ok=false; else ans[q.id]=parseInt(s.value);
                             });
-                            if (!allAnswered) {
-                                showToast('请回答所有题目');
-                                return;
-                            }
-                            STATE.neuroticismAnswers = answers;
-                            // 计算神经质总分（反向题反向计分）
-                            let total = 0;
-                            NEUROTICISM_QUESTIONS.forEach(q => {
-                                let val = answers[q.id];
-                                if (q.reverse) val = 6 - val;
-                                total += val;
-                            });
-                            STATE.neuroticismScore = total;
-                            STATE.sessionId = 'SESS-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+                            if(!ok) return showToast('请回答所有题目');
+                            STATE.neuroAnswers=ans;
+                            let total=0;
+                            NEURO_QUESTIONS.forEach(q=>{ let v=ans[q.id]; if(q.reverse) v=6-v; total+=v; });
+                            STATE.neuroScore=total;
+                            STATE.sessionId='SESS-'+Date.now()+'-'+Math.random().toString(36).substr(2,6);
+                            renderStep('game_intro');
+                        });
+                        break;
+                    case 'game_intro':
+                        app.innerHTML=`
+                        <div class="card">
+                            <h2>气球风险决策游戏</h2>
+                            <p class="subtitle">请仔细阅读以下说明</p>
+                            <div style="text-align:left;font-size:0.9rem;color:var(--text-secondary);line-height:1.7;">
+                                <p>🎈 你将进行多轮气球充气游戏。每轮会出现一个气球，你通过点击<strong>「打气」</strong>按钮来积累分数，每次打气获得 <strong>1分</strong>。</p>
+                                <p>🎈 气球有一个<strong>随机的爆炸极限</strong>，一旦充气次数超过这个极限，气球就会<strong>爆炸</strong>，本轮得分为<strong>0</strong>。</p>
+                                <p>🎈 你可以在任何时候点击<strong>「收钱」</strong>按钮，将当前累积的分数存入总分，并安全进入下一轮。</p>
+                                <p>🎈 <strong>气球颜色代表风险等级：</strong></p>
+                                <ul style="margin-left:20px;">
+                                    <li><span style="color:#4da6e8;">🔵 蓝色</span> = <strong>低风险</strong>：爆炸极限较高（通常可以打很多次才爆炸）</li>
+                                    <li><span style="color:#f0a04b;">🟠 橙色</span> = <strong>中风险</strong>：爆炸极限中等</li>
+                                    <li><span style="color:#e85d5d;">🔴 红色</span> = <strong>高风险</strong>：爆炸极限较低，容易爆炸</li>
+                                </ul>
+                                <p>💡 你的目标是<strong>尽可能多地累计分数</strong>。请根据气球颜色和自己的判断决定何时收钱。</p>
+                                <p>📌 游戏共有 <strong>3轮练习</strong>（不计分）和 <strong>30轮正式实验</strong>。</p>
+                            </div>
+                            <button class="btn btn-primary" id="btnStartGame">开始游戏</button>
+                        </div>`;
+                        document.getElementById('btnStartGame').addEventListener('click',()=>{
                             renderStep('game');
                         });
                         break;
-
                     case 'game':
-                        app.innerHTML = `
+                        app.innerHTML=`
                         <div class="card" id="gameCard">
-                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-                                <span class="info-badge"><span id="phaseLabel">🏋️ 练习轮</span> <span id="trialDisplay">1/3</span></span>
-                                <span class="info-badge score-badge">💰 总分: <strong id="totalScoreDisplay">0</strong></span>
+                            <div class="info-row">
+                                <span class="badge"><span id="phaseLabel">🏋️ 练习轮</span> <span id="trialDisplay">1/3</span></span>
+                                <span class="badge score">💰 总分: <strong id="totalScoreDisplay">0</strong></span>
                             </div>
-                            <div id="riskContainer" style="min-height:30px;"></div>
-                            <div class="canvas-wrapper" id="canvasWrapper">
-                                <canvas id="balloonCanvas"></canvas>
-                            </div>
+                            <div id="riskContainer"></div>
+                            <div class="canvas-wrapper" id="canvasWrapper"><canvas id="balloonCanvas"></canvas></div>
                             <div style="display:flex;justify-content:center;gap:16px;margin-bottom:12px;">
-                                <span class="info-badge">💨 打气: <strong id="pumpCount">0</strong></span>
-                                <span class="info-badge" style="background:#fffbea;border-color:#fbd38d;color:#b7791f;">⭐ 本轮: <strong id="potentialScore">0</strong></span>
+                                <span class="badge">💨 打气: <strong id="pumpCount">0</strong></span>
+                                <span class="badge" style="background:#fffbea;border-color:#fbd38d;color:#b7791f;">⭐ 本轮: <strong id="potentialScore">0</strong></span>
                             </div>
-                            <div class="btn-row">
-                                <button class="btn btn-primary" id="btnPump" style="width:auto;padding:14px 36px;">💨 打气</button>
-                                <button class="btn btn-secondary" id="btnCashout" disabled style="border-color:var(--success);color:var(--success);">🏦 收钱</button>
+                            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                                <button class="btn btn-primary" id="btnPump" style="padding:14px 36px;">💨 打气</button>
+                                <button class="btn btn-success" id="btnCashout" disabled>🏦 收钱</button>
                             </div>
                             <p style="font-size:0.7rem;color:var(--text-secondary);margin-top:8px;">键盘：空格=打气，C/回车=收钱</p>
                         </div>`;
                         initGameCanvas();
                         break;
-
                     case 'result':
-                        const formal = STATE.trialData;
-                        const explodedCount = formal.filter(d => d.exploded).length;
-                        const cashedOutCount = formal.length - explodedCount;
-                        const nonExploded = formal.filter(d => !d.exploded);
-                        const avgPumps = nonExploded.length > 0 ?
-                            (nonExploded.reduce((s, d) => s + d.pumps, 0) / nonExploded.length).toFixed(1) : 'N/A';
-                        const maxPumps = formal.length > 0 ? Math.max(...formal.map(d => d.pumps)) : 0;
-                        app.innerHTML = `
+                        const formal=STATE.trialData;
+                        const exploded=formal.filter(d=>d.exploded).length;
+                        const nonExpl=formal.filter(d=>!d.exploded);
+                        const avgPumps=nonExpl.length? (nonExpl.reduce((s,d)=>s+d.pumps,0)/nonExpl.length).toFixed(1):'N/A';
+                        app.innerHTML=`
                         <div class="card">
                             <div style="font-size:3rem;">🏆</div>
                             <h2>测评完成</h2>
-                            <p class="subtitle">感谢您的参与！</p>
+                            <p class="subtitle">感谢你的参与！你的表现摘要如下：</p>
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;margin:16px 0;">
-                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${STATE.totalScore}</strong><br><small>总得分</small></div>
-                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${STATE.neuroticismScore}/50</strong><br><small>情绪稳定性分</small></div>
-                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${explodedCount}/${formal.length}</strong><br><small>爆炸率</small></div>
+                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${STATE.totalScore}</strong><br><small>游戏总得分</small></div>
+                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${exploded}/${formal.length}</strong><br><small>爆炸轮次</small></div>
                                 <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${avgPumps}</strong><br><small>平均打气(未爆)</small></div>
                             </div>
-                            <p style="font-size:0.8rem;color:var(--text-secondary);">（情绪稳定性分越高表示情绪越不稳定）</p>
-                            <div class="btn-row" style="flex-direction:column;gap:8px;">
-                                <button class="btn btn-primary" id="btnExportCSV">📥 导出CSV数据</button>
-                                <button class="btn btn-secondary" id="btnExportJSON">📋 导出JSON数据</button>
-                            </div>
+                            <p id="uploadStatus" style="margin:16px 0;font-weight:600;">📡 正在提交数据...</p>
                         </div>`;
-                        document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
-                        document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
+                        // 自动上传数据
+                        uploadAllData().then(()=>{
+                            document.getElementById('uploadStatus').innerHTML = '✅ 数据已成功提交，感谢参与！';
+                        }).catch(()=>{
+                            document.getElementById('uploadStatus').innerHTML = '⚠️ 数据提交失败，请联系管理员。';
+                        });
                         break;
                 }
             }
 
-            // ==================== 游戏Canvas初始化 ====================
-            function initGameCanvas() {
-                const canvasEl = document.getElementById('balloonCanvas');
-                if (!canvasEl) return;
-                const wrapper = document.getElementById('canvasWrapper');
-                const dpr = window.devicePixelRatio || 1;
-                const rect = wrapper.getBoundingClientRect();
-                const logicalW = Math.min(rect.width - 8, 300);
-                const logicalH = logicalW * 1.15;
-                canvasLogicalW = logicalW;
-                canvasLogicalH = logicalH;
-                canvasEl.width = logicalW * CONFIG.canvasScale;
-                canvasEl.height = logicalH * CONFIG.canvasScale;
-                canvasEl.style.width = logicalW + 'px';
-                canvasEl.style.height = logicalH + 'px';
-                canvas = canvasEl;
-                ctx = canvas.getContext('2d');
-                ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.scale(CONFIG.canvasScale, CONFIG.canvasScale);
-                balloonX = logicalW / 2;
-                balloonBaseY = logicalH * 0.58;
-                balloonY = balloonBaseY;
-                particleSystem = new ParticleSystem(canvas, ctx);
-                resetShake();
+            // ==================== 游戏逻辑 ====================
+            function initGameCanvas(){
+                const canvasEl=document.getElementById('balloonCanvas');
+                const wrapper=document.getElementById('canvasWrapper');
+                const dpr=window.devicePixelRatio||1;
+                const rect=wrapper.getBoundingClientRect();
+                const logicalW=Math.min(rect.width-8,300);
+                const logicalH=logicalW*1.15;
+                cw=logicalW; ch=logicalH;
+                canvasEl.width=logicalW*CONFIG.canvasScale;
+                canvasEl.height=logicalH*CONFIG.canvasScale;
+                canvasEl.style.width=logicalW+'px';
+                canvasEl.style.height=logicalH+'px';
+                canvas=canvasEl; ctx=canvas.getContext('2d');
+                ctx.setTransform(1,0,0,1,0,0);
+                ctx.scale(CONFIG.canvasScale,CONFIG.canvasScale);
+                balloonX=logicalW/2; balloonBaseY=logicalH*0.58; balloonY=balloonBaseY;
+                particleSystem=new ParticleSystem(canvas,ctx);
+                shakeX=shakeY=shakeIntensity=flashAlpha=successGlow=0;
                 startRenderLoop();
                 setupGameControls();
                 startNewTrial();
             }
-
-            function resetShake() {
-                shakeOffsetX = 0;
-                shakeOffsetY = 0;
-                shakeIntensity = 0;
-                flashAlpha = 0;
-                successGlow = 0;
-            }
-
-            function startRenderLoop() {
-                if (renderLoopId) cancelAnimationFrame(renderLoopId);
-                const loop = () => {
-                    renderBalloon();
-                    renderLoopId = requestAnimationFrame(loop);
-                };
+            function startRenderLoop(){
+                if(renderLoopId) cancelAnimationFrame(renderLoopId);
+                const loop=()=>{ renderBalloon(); renderLoopId=requestAnimationFrame(loop); };
                 loop();
             }
-
-            function stopRenderLoop() {
-                if (renderLoopId) {
-                    cancelAnimationFrame(renderLoopId);
-                    renderLoopId = null;
+            function stopRenderLoop(){ if(renderLoopId){ cancelAnimationFrame(renderLoopId); renderLoopId=null; } }
+            function renderBalloon(){
+                if(!ctx||!canvas) return;
+                const w=cw, h=ch;
+                ctx.clearRect(0,0,w,h);
+                if(successGlow>0){
+                    const g=ctx.createRadialGradient(balloonX,balloonY,10,balloonX,balloonY,w*0.7);
+                    g.addColorStop(0,`rgba(56,161,105,${successGlow*0.5})`); g.addColorStop(1,'rgba(56,161,105,0)');
+                    ctx.fillStyle=g; ctx.fillRect(0,0,w,h); successGlow=Math.max(0,successGlow-0.03);
+                }
+                if(flashAlpha>0){
+                    ctx.fillStyle=`rgba(255,107,107,${flashAlpha})`; ctx.fillRect(0,0,w,h); flashAlpha=Math.max(0,flashAlpha-0.06);
+                }
+                if(shakeIntensity>0.01){ shakeX=(Math.random()-0.5)*shakeIntensity*2; shakeY=(Math.random()-0.5)*shakeIntensity*2; shakeIntensity*=0.85; }
+                else{ shakeX=shakeY=shakeIntensity=0; }
+                const bx=balloonX+shakeX, by=balloonY+shakeY;
+                const baseR=w*CONFIG.baseBalloonRadius;
+                const pumpR=STATE.currentPumps*w*CONFIG.radiusGrowthPerPump;
+                const balloonR=Math.min(baseR+pumpR,w*CONFIG.maxBalloonRadius);
+                const rx=balloonR*0.78, ry=balloonR;
+                const cond=STATE.currentCondition; const color=cond?cond.colorHex:'#4da6e8';
+                ctx.save(); ctx.shadowColor='rgba(0,0,0,0.15)'; ctx.shadowBlur=12; ctx.shadowOffsetX=3; ctx.shadowOffsetY=5;
+                ctx.fillStyle=color; ctx.beginPath(); ctx.ellipse(bx,by,rx,ry,0,0,Math.PI*2); ctx.fill();
+                ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+                const hl=ctx.createRadialGradient(bx-rx*0.35,by-ry*0.4,rx*0.08,bx,by,rx*0.9);
+                hl.addColorStop(0,'rgba(255,255,255,0.7)'); hl.addColorStop(0.3,'rgba(255,255,255,0.3)'); hl.addColorStop(1,'rgba(255,255,255,0)');
+                ctx.fillStyle=hl; ctx.beginPath(); ctx.ellipse(bx,by,rx,ry,0,0,Math.PI*2); ctx.fill();
+                ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=1.5; ctx.stroke(); ctx.restore();
+                const knotY=by+ry, knotSize=rx*0.22;
+                ctx.fillStyle=color; ctx.strokeStyle='rgba(0,0,0,0.1)'; ctx.lineWidth=1;
+                ctx.beginPath(); ctx.moveTo(bx-knotSize,knotY); ctx.lineTo(bx+knotSize,knotY); ctx.lineTo(bx,knotY+knotSize*1.6); ctx.closePath(); ctx.fill(); ctx.stroke();
+                const lineY=h*0.92;
+                ctx.strokeStyle='rgba(0,0,0,0.25)'; ctx.lineWidth=1.2; ctx.setLineDash([4,3]);
+                ctx.beginPath(); ctx.moveTo(bx,knotY+knotSize*1.6); ctx.quadraticCurveTo(bx+8,(knotY+knotSize*1.6+lineY)/2,bx+2,lineY); ctx.stroke(); ctx.setLineDash([]);
+                if(particleSystem&&particleSystem.isActive) particleSystem.draw(ctx);
+                if(STATE.currentPumps>0&&STATE.isBalloonAlive){
+                    ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.font=`bold ${rx*0.55}px "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif`;
+                    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(STATE.currentPumps,bx,by+ry*0.05);
                 }
             }
-
-            function renderBalloon() {
-                if (!ctx || !canvas) return;
-                const w = canvasLogicalW;
-                const h = canvasLogicalH;
-                ctx.clearRect(0, 0, w, h);
-                if (successGlow > 0) {
-                    const glow = ctx.createRadialGradient(balloonX, balloonY, 10, balloonX, balloonY, w * 0.7);
-                    glow.addColorStop(0, `rgba(56,161,105,${successGlow*0.5})`);
-                    glow.addColorStop(1, 'rgba(56,161,105,0)');
-                    ctx.fillStyle = glow;
-                    ctx.fillRect(0, 0, w, h);
-                    successGlow = Math.max(0, successGlow - 0.03);
-                }
-                if (flashAlpha > 0) {
-                    ctx.fillStyle = `rgba(255,107,107,${flashAlpha})`;
-                    ctx.fillRect(0, 0, w, h);
-                    flashAlpha = Math.max(0, flashAlpha - 0.06);
-                }
-                if (shakeIntensity > 0.01) {
-                    shakeOffsetX = (Math.random() - 0.5) * shakeIntensity * 2;
-                    shakeOffsetY = (Math.random() - 0.5) * shakeIntensity * 2;
-                    shakeIntensity *= 0.85;
-                } else {
-                    shakeOffsetX = 0;
-                    shakeOffsetY = 0;
-                    shakeIntensity = 0;
-                }
-                const bx = balloonX + shakeOffsetX;
-                const by = balloonY + shakeOffsetY;
-                const baseR = w * CONFIG.baseBalloonRadius;
-                const pumpR = STATE.currentPumps * w * CONFIG.radiusGrowthPerPump;
-                const balloonR = Math.min(baseR + pumpR, w * CONFIG.maxBalloonRadius);
-                const rx = balloonR * 0.78;
-                const ry = balloonR;
-                const cond = STATE.currentCondition;
-                const balloonColor = cond ? cond.colorHex : '#4da6e8';
-                ctx.save();
-                ctx.shadowColor = 'rgba(0,0,0,0.15)';
-                ctx.shadowBlur = 12;
-                ctx.shadowOffsetX = 3;
-                ctx.shadowOffsetY = 5;
-                ctx.fillStyle = balloonColor;
-                ctx.beginPath();
-                ctx.ellipse(bx, by, rx, ry, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowColor = 'transparent';
-                ctx.shadowBlur = 0;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 0;
-                const hl = ctx.createRadialGradient(bx - rx * 0.35, by - ry * 0.4, rx * 0.08, bx, by, rx * 0.9);
-                hl.addColorStop(0, 'rgba(255,255,255,0.7)');
-                hl.addColorStop(0.3, 'rgba(255,255,255,0.3)');
-                hl.addColorStop(1, 'rgba(255,255,255,0)');
-                ctx.fillStyle = hl;
-                ctx.beginPath();
-                ctx.ellipse(bx, by, rx, ry, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-                ctx.restore();
-                const knotY = by + ry;
-                const knotSize = rx * 0.22;
-                ctx.fillStyle = balloonColor;
-                ctx.strokeStyle = 'rgba(0,0,0,0.1)';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(bx - knotSize, knotY);
-                ctx.lineTo(bx + knotSize, knotY);
-                ctx.lineTo(bx, knotY + knotSize * 1.6);
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
-                const lineStartY = knotY + knotSize * 1.6;
-                const lineEndY = h * 0.92;
-                ctx.strokeStyle = 'rgba(0,0,0,0.25)';
-                ctx.lineWidth = 1.2;
-                ctx.setLineDash([4, 3]);
-                ctx.beginPath();
-                ctx.moveTo(bx, lineStartY);
-                ctx.quadraticCurveTo(bx + 8, (lineStartY + lineEndY) / 2, bx + 2, lineEndY);
-                ctx.stroke();
-                ctx.setLineDash([]);
-                if (particleSystem && particleSystem.isActive) particleSystem.draw(ctx);
-                if (STATE.currentPumps > 0 && STATE.isBalloonAlive) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                    ctx.font = `bold ${rx*0.55}px "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif`;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(STATE.currentPumps, bx, by + ry * 0.05);
-                }
+            function setupGameControls(){
+                document.getElementById('btnPump').addEventListener('click',doPump);
+                document.getElementById('btnCashout').addEventListener('click',doCashout);
+                document.addEventListener('keydown',gameKeyHandler);
             }
-
-            function setupGameControls() {
-                document.getElementById('btnPump').addEventListener('click', doPump);
-                document.getElementById('btnCashout').addEventListener('click', doCashout);
-                document.addEventListener('keydown', gameKeyHandler);
+            function gameKeyHandler(e){
+                if(STATE.step!=='game'||STATE.trialEnded||!STATE.isBalloonAlive||STATE.isPumping) return;
+                if(e.code==='Space'||e.code==='KeyP'){ e.preventDefault(); doPump(); }
+                else if(e.code==='KeyC'||e.code==='Enter'){ e.preventDefault(); doCashout(); }
             }
-
-            function gameKeyHandler(e) {
-                if (STATE.step !== 'game' || STATE.trialEnded || !STATE.isBalloonAlive || STATE.isPumping) return;
-                if (e.code === 'Space' || e.code === 'KeyP') {
-                    e.preventDefault();
-                    doPump();
-                } else if (e.code === 'KeyC' || e.code === 'Enter') {
-                    e.preventDefault();
-                    doCashout();
-                }
-            }
-
-            function startNewTrial() {
-                STATE.trialEnded = false;
-                STATE.isBalloonAlive = true;
-                STATE.currentPumps = 0;
-                STATE.currentPotentialScore = 0;
-                STATE.isPumping = false;
-                STATE.pumpTimestamps = [];
-                STATE.trialStartTime = Date.now();
-                resetShake();
-                if (particleSystem) particleSystem.stop();
-                STATE.currentCondition = assignCondition();
-                STATE.currentThreshold = generateThreshold(STATE.currentCondition);
-                updateGameUI();
-                updateButtons(false);
-                updateRiskIndicator();
-                document.getElementById('canvasWrapper')?.classList.remove('danger-zone');
+            function startNewTrial(){
+                STATE.trialEnded=false; STATE.isBalloonAlive=true; STATE.currentPumps=0; STATE.currentPotentialScore=0;
+                STATE.isPumping=false; STATE.pumpTimestamps=[]; STATE.trialStartTime=Date.now();
+                shakeX=shakeY=shakeIntensity=flashAlpha=successGlow=0;
+                if(particleSystem) particleSystem.stop();
+                STATE.currentCondition=assignCondition();
+                STATE.currentThreshold=generateThreshold(STATE.currentCondition);
+                updateGameUI(); updateButtons(false); updateRiskIndicator();
+                document.getElementById('canvasWrapper')?.classList.remove('danger');
                 document.getElementById('gameCard')?.classList.remove('shake');
                 document.getElementById('btnPump')?.focus();
             }
-
-            function assignCondition() {
-                if (!STATE.isPracticePhase) {
-                    const completed = STATE.totalCompletedTrials;
-                    const per = CONFIG.trialsPerCondition;
-                    if (completed < per) return CONFIG.conditions[0];
-                    if (completed < per * 2) return CONFIG.conditions[1];
+            function assignCondition(){
+                if(!STATE.isPracticePhase){
+                    const comp=STATE.totalCompletedTrials;
+                    if(comp<CONFIG.trialsPerCondition) return CONFIG.conditions[0];
+                    if(comp<CONFIG.trialsPerCondition*2) return CONFIG.conditions[1];
                     return CONFIG.conditions[2];
                 }
-                return CONFIG.conditions[1]; // 练习用中风险
+                return CONFIG.conditions[1];
             }
-
-            function generateThreshold(cond) {
-                return Math.floor(Math.random() * (cond.thresholdMax - cond.thresholdMin + 1)) + cond.thresholdMin;
-            }
-
-            function doPump() {
-                if (STATE.trialEnded || !STATE.isBalloonAlive || STATE.isPumping) return;
-                STATE.isPumping = true;
-                STATE.pumpTimestamps.push(Date.now());
-                STATE.currentPumps++;
-                STATE.currentPotentialScore = STATE.currentPumps;
-                shakeIntensity = Math.min(shakeIntensity + 0.6, 8);
-                document.getElementById('pumpCount').textContent = STATE.currentPumps;
-                document.getElementById('potentialScore').textContent = STATE.currentPotentialScore;
-                playPumpSound();
-                const proximity = STATE.currentThreshold > 0 ? STATE.currentPumps / STATE.currentThreshold : 0;
-                if (proximity > 0.7) document.getElementById('canvasWrapper')?.classList.add('danger-zone');
-                if (STATE.currentPumps > STATE.currentThreshold) {
-                    STATE.isBalloonAlive = false;
-                    STATE.trialEnded = true;
-                    STATE.currentPotentialScore = 0;
-                    flashAlpha = 1;
-                    flashColor = '#ff6b6b';
-                    shakeIntensity = 18;
+            function generateThreshold(cond){ return Math.floor(Math.random()*(cond.thresholdMax-cond.thresholdMin+1))+cond.thresholdMin; }
+            function doPump(){
+                if(STATE.trialEnded||!STATE.isBalloonAlive||STATE.isPumping) return;
+                STATE.isPumping=true; STATE.pumpTimestamps.push(Date.now());
+                STATE.currentPumps++; STATE.currentPotentialScore=STATE.currentPumps;
+                shakeIntensity=Math.min(shakeIntensity+0.6,8);
+                document.getElementById('pumpCount').textContent=STATE.currentPumps;
+                document.getElementById('potentialScore').textContent=STATE.currentPotentialScore;
+                playPump();
+                if(STATE.currentThreshold>0&&STATE.currentPumps/STATE.currentThreshold>0.7) document.getElementById('canvasWrapper')?.classList.add('danger');
+                if(STATE.currentPumps>STATE.currentThreshold){
+                    STATE.isBalloonAlive=false; STATE.trialEnded=true; STATE.currentPotentialScore=0;
+                    flashAlpha=1; flashColor='#ff6b6b'; shakeIntensity=18;
                     document.getElementById('gameCard')?.classList.add('shake');
-                    document.getElementById('canvasWrapper')?.classList.add('danger-zone');
-                    playExplosionSound();
-                    if (particleSystem) {
-                        particleSystem.emit(balloonX, balloonY, STATE.currentCondition.colorHex, 80);
-                        particleSystem.start();
-                    }
-                    showFeedback('💥 爆炸了！', 'explode');
-                    updateButtons(true);
-                    recordTrial(true);
-                    setTimeout(() => advanceTrial(), 1200);
-                } else {
-                    updateButtons(false);
-                    document.getElementById('btnCashout').disabled = false;
+                    document.getElementById('canvasWrapper')?.classList.add('danger');
+                    playExplosion();
+                    if(particleSystem){ particleSystem.emit(balloonX,balloonY,STATE.currentCondition.colorHex,80); particleSystem.start(); }
+                    showFeedback('💥 爆炸了！','explode');
+                    updateButtons(true); recordTrial(true);
+                    setTimeout(()=>advanceTrial(),1200);
+                }else{
+                    updateButtons(false); document.getElementById('btnCashout').disabled=false;
                 }
-                setTimeout(() => { STATE.isPumping = false; }, 200);
+                setTimeout(()=>{STATE.isPumping=false;},200);
             }
-
-            function doCashout() {
-                if (STATE.trialEnded || !STATE.isBalloonAlive || STATE.isPumping || STATE.currentPumps === 0) return;
-                STATE.trialEnded = true;
-                const earned = STATE.currentPotentialScore;
-                STATE.totalScore += earned;
-                successGlow = 1;
-                flashAlpha = 0.5;
-                flashColor = '#68d391';
-                playCashoutSound();
-                showFeedback('✅ +' + earned + ' 分！', 'cashout');
-                document.getElementById('totalScoreDisplay').textContent = STATE.totalScore;
-                document.getElementById('potentialScore').textContent = earned;
-                updateButtons(true);
-                recordTrial(false);
-                setTimeout(() => advanceTrial(), 800);
+            function doCashout(){
+                if(STATE.trialEnded||!STATE.isBalloonAlive||STATE.isPumping||STATE.currentPumps===0) return;
+                STATE.trialEnded=true; const earned=STATE.currentPotentialScore;
+                STATE.totalScore+=earned; successGlow=1; flashAlpha=0.5; flashColor='#68d391';
+                playCashout();
+                showFeedback('✅ +'+earned+' 分！','cashout');
+                document.getElementById('totalScoreDisplay').textContent=STATE.totalScore;
+                document.getElementById('potentialScore').textContent=earned;
+                updateButtons(true); recordTrial(false);
+                setTimeout(()=>advanceTrial(),800);
             }
-
-            function recordTrial(exploded) {
+            function recordTrial(exploded){
                 const record = {
                     phone: STATE.participant.phone,
                     gender: STATE.participant.gender,
                     age: STATE.participant.age,
-                    neuroticism_score: STATE.neuroticismScore,
+                    neuroticism_score: STATE.neuroScore,
                 };
-                // 添加每个题目得分
-                for (const [key, val] of Object.entries(STATE.neuroticismAnswers)) {
-                    record['NQ_' + key] = val;
-                }
-                record.session_id = STATE.sessionId;
-                record.trial = STATE.isPracticePhase ? 'P' + STATE.currentTrial : STATE.currentTrial;
-                record.is_practice = STATE.isPracticePhase;
-                record.condition = STATE.currentCondition.name;
-                record.condition_label = STATE.currentCondition.riskLabel;
-                record.threshold = STATE.currentThreshold;
-                record.pumps = STATE.currentPumps;
-                record.exploded = exploded ? 1 : 0;
-                record.cashed_out = exploded ? 0 : 1;
-                record.trial_score = exploded ? 0 : STATE.currentPotentialScore;
-                record.total_score = STATE.totalScore;
-                record.timestamp = new Date().toISOString();
-                record.duration_ms = Date.now() - STATE.trialStartTime;
-                record.pump_intervals = JSON.stringify(STATE.pumpTimestamps.slice(1).map((t, i) => t - STATE
-                    .pumpTimestamps[i]));
-                if (STATE.isPracticePhase) STATE.practiceData.push(record);
+                for(const [k,v] of Object.entries(STATE.neuroAnswers)) record['NQ_'+k]=v;
+                for(const [k,v] of Object.entries(STATE.sjtAnswers)) record['SJT_'+k]=v;
+                record.session_id=STATE.sessionId;
+                record.trial=STATE.isPracticePhase?'P'+STATE.currentTrial:STATE.currentTrial;
+                record.is_practice=STATE.isPracticePhase;
+                record.condition=STATE.currentCondition.name;
+                record.condition_label=STATE.currentCondition.riskLabel;
+                record.threshold=STATE.currentThreshold;
+                record.pumps=STATE.currentPumps;
+                record.exploded=exploded?1:0;
+                record.cashed_out=exploded?0:1;
+                record.trial_score=exploded?0:STATE.currentPotentialScore;
+                record.total_score=STATE.totalScore;
+                record.timestamp=new Date().toISOString();
+                record.duration_ms=Date.now()-STATE.trialStartTime;
+                record.pump_intervals=JSON.stringify(STATE.pumpTimestamps.slice(1).map((t,i)=>t-STATE.pumpTimestamps[i]));
+                if(STATE.isPracticePhase) STATE.practiceData.push(record);
                 else STATE.trialData.push(record);
-                saveToLocalStorage(record);
             }
-
-            function advanceTrial() {
+            function advanceTrial(){
                 STATE.currentTrial++;
-                if (STATE.isPracticePhase && STATE.currentTrial > CONFIG.practiceTrials) {
-                    STATE.isPracticePhase = false;
-                    STATE.currentTrial = 1;
-                    STATE.totalCompletedTrials = 0;
-                    STATE.totalScore = 0;
-                    document.getElementById('totalScoreDisplay').textContent = '0';
-                    showToast('🏋️ 练习结束，正式实验开始！');
-                } else if (!STATE.isPracticePhase && STATE.currentTrial > CONFIG.totalTrials) {
-                    stopRenderLoop();
-                    document.removeEventListener('keydown', gameKeyHandler);
-                    renderStep('result');
-                    return;
+                if(STATE.isPracticePhase&&STATE.currentTrial>CONFIG.practiceTrials){
+                    STATE.isPracticePhase=false; STATE.currentTrial=1; STATE.totalCompletedTrials=0; STATE.totalScore=0;
+                    document.getElementById('totalScoreDisplay').textContent='0'; showToast('练习结束，正式实验开始！');
+                }else if(!STATE.isPracticePhase&&STATE.currentTrial>CONFIG.totalTrials){
+                    stopRenderLoop(); document.removeEventListener('keydown',gameKeyHandler); renderStep('result'); return;
                 }
-                if (!STATE.isPracticePhase && STATE.currentTrial > 1) STATE.totalCompletedTrials++;
+                if(!STATE.isPracticePhase&&STATE.currentTrial>1) STATE.totalCompletedTrials++;
                 startNewTrial();
             }
-
-            function updateButtons(disabled) {
-                document.getElementById('btnPump').disabled = disabled;
-                document.getElementById('btnCashout').disabled = disabled || STATE.currentPumps === 0;
+            function updateButtons(disabled){
+                document.getElementById('btnPump').disabled=disabled;
+                document.getElementById('btnCashout').disabled=disabled||STATE.currentPumps===0;
+            }
+            function updateGameUI(){
+                document.getElementById('totalScoreDisplay').textContent=STATE.totalScore;
+                document.getElementById('pumpCount').textContent='0'; document.getElementById('potentialScore').textContent='0';
+                const ph=STATE.isPracticePhase?'🏋️ 练习轮':'🎯 正式轮';
+                const td=STATE.isPracticePhase?`${STATE.currentTrial}/${CONFIG.practiceTrials}`:`${STATE.currentTrial}/${CONFIG.totalTrials}`;
+                document.getElementById('phaseLabel').textContent=ph; document.getElementById('trialDisplay').textContent=td;
+            }
+            function updateRiskIndicator(){
+                const c=STATE.currentCondition; if(!c) return;
+                document.getElementById('riskContainer').innerHTML=`<span class="risk-tag ${c.cssClass}"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c.colorHex};"></span> ${c.riskLabel}</span>`;
             }
 
-            function updateGameUI() {
-                document.getElementById('totalScoreDisplay').textContent = STATE.totalScore;
-                document.getElementById('pumpCount').textContent = '0';
-                document.getElementById('potentialScore').textContent = '0';
-                const phase = STATE.isPracticePhase ? '🏋️ 练习轮' : '🎯 正式轮';
-                const trialDisp = STATE.isPracticePhase ? `${STATE.currentTrial}/${CONFIG.practiceTrials}` :
-                    `${STATE.currentTrial}/${CONFIG.totalTrials}`;
-                document.getElementById('phaseLabel').textContent = phase;
-                document.getElementById('trialDisplay').textContent = trialDisp;
-            }
-
-            function updateRiskIndicator() {
-                const cond = STATE.currentCondition;
-                if (!cond) return;
-                document.getElementById('riskContainer').innerHTML = `
-                    <span class="risk-indicator ${cond.cssClass}">
-                        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${cond.colorHex};"></span>
-                        ${cond.riskLabel}
-                    </span>`;
-            }
-
-            function saveToLocalStorage(record) {
+            // ==================== 数据上传 ====================
+            async function uploadAllData() {
+                const payload = {
+                    participant: STATE.participant,
+                    neuroticism_score: STATE.neuroScore,
+                    neuro_answers: STATE.neuroAnswers,
+                    sjt_answers: STATE.sjtAnswers,
+                    practice_trials: STATE.practiceData,
+                    formal_trials: STATE.trialData,
+                    session_id: STATE.sessionId,
+                    completed_at: new Date().toISOString(),
+                };
                 try {
-                    const stored = localStorage.getItem('balloon_neuro_data');
-                    let all = stored ? JSON.parse(stored) : [];
-                    all.push(record);
-                    localStorage.setItem('balloon_neuro_data', JSON.stringify(all));
-                } catch (e) {}
-            }
-
-            function getAllStoredData() {
-                try {
-                    return JSON.parse(localStorage.getItem('balloon_neuro_data') || '[]');
-                } catch (e) { return []; }
-            }
-
-            function exportCSV() {
-                const currentData = [...STATE.practiceData, ...STATE.trialData];
-                const exportData = currentData.length > 0 ? currentData : getAllStoredData();
-                if (exportData.length === 0) { showToast('无数据'); return; }
-                const headers = Object.keys(exportData[0]);
-                let csv = headers.join(',') + '\n';
-                exportData.forEach(row => {
-                    const vals = headers.map(h => {
-                        let val = row[h] !== undefined ? row[h] : '';
-                        if (typeof val === 'string' && (val.includes(',') || val.includes('"')))
-                            val = '"' + val.replace(/"/g, '""') + '"';
-                        return val;
+                    const response = await fetch(DATA_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
                     });
-                    csv += vals.join(',') + '\n';
-                });
-                downloadFile(csv, `测评数据_${STATE.participant.phone}_${Date.now()}.csv`, 'text/csv;charset=utf-8');
-                showToast('CSV已下载');
+                    if (!response.ok) throw new Error('上传失败');
+                    return true;
+                } catch (error) {
+                    console.error('数据上传失败:', error);
+                    throw error;
+                }
             }
 
-            function exportJSON() {
-                const currentData = [...STATE.practiceData, ...STATE.trialData];
-                const exportData = currentData.length > 0 ? currentData : getAllStoredData();
-                const json = JSON.stringify({ participant: STATE.participant, neuroticism_score: STATE
-                        .neuroticismScore, trials: exportData }, null, 2);
-                downloadFile(json, `测评数据_${STATE.participant.phone}_${Date.now()}.json`,
-                'application/json;charset=utf-8');
-                showToast('JSON已下载');
-            }
-
-            function downloadFile(content, filename, mime) {
-                const blob = new Blob(['\uFEFF' + content], { type: mime });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-
-            // ==================== 启动 ====================
+            // 启动
             renderStep('welcome');
-
-            console.log('🎈 整合测评工具已就绪');
-            console.log('📋 步骤：基本信息 → 情绪稳定性问卷 → 气球游戏 → 导出数据');
+            console.log('✅ 测评工具已启动（数据将自动上传至Formspree）');
         })();
     </script>
 </body>
