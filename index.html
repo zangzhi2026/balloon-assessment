@@ -138,12 +138,7 @@
 
     <script>
         (function() {
-            // ==================== 配置区域 ====================
-            // ！！！请将下面的 FORMSPREE_ID 替换成您在 formspree.io 注册后获得的 ID ！！！
-            const FORMSPREE_ID = 'YOUR_FORMSPREE_ID'; // 例如 'xqkyaoae'
-            const DATA_ENDPOINT = 'https://script.google.com/u/0/home/projects/16plXWeJPfM7ZHPi-0M2s70kM2BkF5wMfXAlZqR4C7E7gsrQO66sl-uWd/edit';
-            // 如果使用自己的后端接口，也可以直接修改 DATA_ENDPOINT 为您的 URL。
-
+            // ==================== 配置 ====================
             const CONFIG = {
                 totalTrials: 30,
                 practiceTrials: 3,
@@ -159,32 +154,14 @@
                 canvasScale: 2,
             };
 
-            // 情境判断测验题目（可根据岗位自定义）
             const SJT_SCENARIOS = [
-                {
-                    id: 'SJT1', title: '场景1：客户特殊要求',
-                    desc: '你是客户经理，一位重要客户要求你在合同中加入一项条款，但该条款轻微违反了公司内部风险政策。不答应可能失去大单，答应则可能被审计发现。你会怎么做？',
-                    options: ['A. 拒绝客户，严格遵循公司政策，即使可能丢单。', 'B. 答应客户，认为风险不大，优先保住业绩。', 'C. 向客户解释风险，并提议一个折中方案，既满足需求又不明显违规。', 'D. 先答应客户，事后向领导报备争取补签豁免。']
-                }, {
-                    id: 'SJT2', title: '场景2：同事违规操作',
-                    desc: '你发现一位资深同事经常绕过审批流程直接做决策，虽然目前没有造成损失，但明显违反规定。你会怎么处理？',
-                    options: ['A. 直接向合规部门举报。', 'B. 私下提醒同事，希望他改正。', 'C. 装作没看见，多一事不如少一事。', 'D. 在团队会议上暗示规则的重要性，不点名。']
-                }, {
-                    id: 'SJT3', title: '场景3：紧急项目决策',
-                    desc: '你负责的一个项目突然遇到技术故障，按标准流程修复需要两周，但客户要求三天内解决。此时你可以采用一个未充分测试的方案，有70%把握成功。你会怎么做？',
-                    options: ['A. 坚持标准流程，向客户解释需要更多时间。', 'B. 冒险采用快速方案，赌一把能成功。', 'C. 先部分尝试快速方案，同时准备应急预案。', 'D. 寻求上级指示，自己不担责。']
-                }, {
-                    id: 'SJT4', title: '场景4：资源分配冲突',
-                    desc: '两个重要项目同时申请有限的人力资源，你是部门经理。一个项目利润高但风险大，另一个利润低但稳定。你会如何分配？',
-                    options: ['A. 全部投入高利润项目，追求最大回报。', 'B. 全部投入低风险项目，确保稳定。', 'C. 按比例分配，两边兼顾。', 'D. 让两个项目负责人自己协商。']
-                }, {
-                    id: 'SJT5', title: '场景5：客户投诉处理',
-                    desc: '一位客户因服务质量问题投诉，情绪激动，要求高额赔偿。但你调查后发现公司责任较小。你会怎么回应？',
-                    options: ['A. 坚持公司立场，拒绝不合理赔偿。', 'B. 为了避免负面舆情，同意部分赔偿。', 'C. 诚恳沟通，承认服务瑕疵，但解释责任界限，提供象征性补偿。', 'D. 把责任推给一线员工，安抚客户。']
-                }
+                { id:'SJT1', title:'场景1：客户特殊要求', desc:'你是客户经理，一位重要客户要求你在合同中加入一项条款，但该条款轻微违反了公司内部风险政策。不答应可能失去大单，答应则可能被审计发现。你会怎么做？', options:['A. 拒绝客户，严格遵循公司政策，即使可能丢单。','B. 答应客户，认为风险不大，优先保住业绩。','C. 向客户解释风险，并提议一个折中方案，既满足需求又不明显违规。','D. 先答应客户，事后向领导报备争取补签豁免。'] },
+                { id:'SJT2', title:'场景2：同事违规操作', desc:'你发现一位资深同事经常绕过审批流程直接做决策，虽然目前没有造成损失，但明显违反规定。你会怎么处理？', options:['A. 直接向合规部门举报。','B. 私下提醒同事，希望他改正。','C. 装作没看见，多一事不如少一事。','D. 在团队会议上暗示规则的重要性，不点名。'] },
+                { id:'SJT3', title:'场景3：紧急项目决策', desc:'你负责的一个项目突然遇到技术故障，按标准流程修复需要两周，但客户要求三天内解决。此时你可以采用一个未充分测试的方案，有70%把握成功。你会怎么做？', options:['A. 坚持标准流程，向客户解释需要更多时间。','B. 冒险采用快速方案，赌一把能成功。','C. 先部分尝试快速方案，同时准备应急预案。','D. 寻求上级指示，自己不担责。'] },
+                { id:'SJT4', title:'场景4：资源分配冲突', desc:'两个重要项目同时申请有限的人力资源，你是部门经理。一个项目利润高但风险大，另一个利润低但稳定。你会如何分配？', options:['A. 全部投入高利润项目，追求最大回报。','B. 全部投入低风险项目，确保稳定。','C. 按比例分配，两边兼顾。','D. 让两个项目负责人自己协商。'] },
+                { id:'SJT5', title:'场景5：客户投诉处理', desc:'一位客户因服务质量问题投诉，情绪激动，要求高额赔偿。但你调查后发现公司责任较小。你会怎么回应？', options:['A. 坚持公司立场，拒绝不合理赔偿。','B. 为了避免负面舆情，同意部分赔偿。','C. 诚恳沟通，承认服务瑕疵，但解释责任界限，提供象征性补偿。','D. 把责任推给一线员工，安抚客户。'] }
             ];
 
-            // 情绪稳定性题目（大五神经质）
             const NEURO_QUESTIONS = [
                 { id:'N1', text:'我容易感到紧张和焦虑。', reverse:false },
                 { id:'N2', text:'我经常感到忧郁或沮丧。', reverse:false },
@@ -337,7 +314,7 @@
                         });
                         break;
                     case 'sjt':
-                        let sjtHTML = SJT_SCENARIOS.map((sc,i)=>{
+                        let sjtHTML = SJT_SCENARIOS.map(sc=>{
                             let opts = sc.options.map(opt=>{
                                 const val=opt.charAt(0);
                                 const checked=STATE.sjtAnswers[sc.id]===val?'checked':'';
@@ -448,20 +425,22 @@
                         <div class="card">
                             <div style="font-size:3rem;">🏆</div>
                             <h2>测评完成</h2>
-                            <p class="subtitle">感谢你的参与！你的表现摘要如下：</p>
+                            <p class="subtitle">感谢参与！以下是你的表现摘要</p>
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;margin:16px 0;">
                                 <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${STATE.totalScore}</strong><br><small>游戏总得分</small></div>
-                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${exploded}/${formal.length}</strong><br><small>爆炸轮次</small></div>
+                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${STATE.neuroScore}/50</strong><br><small>情绪稳定性分</small></div>
+                                <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${exploded}/${formal.length}</strong><br><small>爆炸率</small></div>
                                 <div style="background:#f7fafc;padding:12px;border-radius:10px;"><strong>${avgPumps}</strong><br><small>平均打气(未爆)</small></div>
                             </div>
-                            <p id="uploadStatus" style="margin:16px 0;font-weight:600;">📡 正在提交数据...</p>
+                            <p style="font-size:0.8rem;color:var(--text-secondary);">（情绪稳定性分越高表示情绪越不稳定）</p>
+                            <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+                                <button class="btn btn-primary" id="btnExportCSV">📥 导出CSV数据</button>
+                                <button class="btn btn-outline" id="btnExportJSON">📋 导出JSON数据</button>
+                            </div>
+                            <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:10px;">请将下载的文件发送给HR或管理员。</p>
                         </div>`;
-                        // 自动上传数据
-                        uploadAllData().then(()=>{
-                            document.getElementById('uploadStatus').innerHTML = '✅ 数据已成功提交，感谢参与！';
-                        }).catch(()=>{
-                            document.getElementById('uploadStatus').innerHTML = '⚠️ 数据提交失败，请联系管理员。';
-                        });
+                        document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
+                        document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
                         break;
                 }
             }
@@ -654,35 +633,48 @@
                 document.getElementById('riskContainer').innerHTML=`<span class="risk-tag ${c.cssClass}"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c.colorHex};"></span> ${c.riskLabel}</span>`;
             }
 
-            // ==================== 数据上传 ====================
-            async function uploadAllData() {
-                const payload = {
+            // ==================== 导出功能 ====================
+            function exportCSV(){
+                const data = [...STATE.practiceData, ...STATE.trialData];
+                if(data.length===0){ showToast('暂无数据'); return; }
+                const headers = Object.keys(data[0]);
+                let csv = headers.join(',') + '\n';
+                data.forEach(row => {
+                    const vals = headers.map(h => {
+                        let v = row[h]!==undefined ? row[h] : '';
+                        if(typeof v==='string' && (v.includes(',') || v.includes('"'))) v = '"'+v.replace(/"/g,'""')+'"';
+                        return v;
+                    });
+                    csv += vals.join(',') + '\n';
+                });
+                downloadFile(csv, `测评数据_${STATE.participant.phone}_${Date.now()}.csv`, 'text/csv;charset=utf-8');
+                showToast('CSV已下载，请发给管理员');
+            }
+            function exportJSON(){
+                const data = [...STATE.practiceData, ...STATE.trialData];
+                const json = JSON.stringify({
                     participant: STATE.participant,
                     neuroticism_score: STATE.neuroScore,
                     neuro_answers: STATE.neuroAnswers,
                     sjt_answers: STATE.sjtAnswers,
                     practice_trials: STATE.practiceData,
-                    formal_trials: STATE.trialData,
-                    session_id: STATE.sessionId,
-                    completed_at: new Date().toISOString(),
-                };
-                try {
-                    const response = await fetch(DATA_ENDPOINT, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload),
-                    });
-                    if (!response.ok) throw new Error('上传失败');
-                    return true;
-                } catch (error) {
-                    console.error('数据上传失败:', error);
-                    throw error;
-                }
+                    formal_trials: STATE.trialData
+                }, null, 2);
+                downloadFile(json, `测评数据_${STATE.participant.phone}_${Date.now()}.json`, 'application/json;charset=utf-8');
+                showToast('JSON已下载，请发给管理员');
+            }
+            function downloadFile(content, filename, mime){
+                const blob = new Blob(['\uFEFF'+content], {type: mime});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = filename;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                URL.revokeObjectURL(url);
             }
 
             // 启动
             renderStep('welcome');
-            console.log('✅ 测评工具已启动（数据将自动上传至Formspree）');
+            console.log('✅ 测评工具已启动（被试可自行导出数据）');
         })();
     </script>
 </body>
